@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Roberto & Carly — 12.12.2025</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400;1,500&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+:root {
+  --forest: #3b4a3f;
+  --forest-deep: #2a352e;
+  --forest-mid: #4f6155;
+  --sage: #7a9182;
+  --sage-light: #b2c4ba;
+  --cream: #f5f0e8;
+  --cream-dark: #ede7d9;
+  --cream-mid: #e5ddd0;
+  --ivory: #faf7f2;
+  --dark-text: #1e2820;
+  --mid-text: #5a6b5e;
+  --light-text: #96a89c;
+  --border: rgba(59,74,63,0.15);
+  --border-mid: rgba(59,74,63,0.25);
+  --font-head: 'Playfair Display', serif;
+  --font-display: 'Cormorant Garamond', serif;
+  --font-body: 'Jost', sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:var(--font-body);background:var(--ivory);color:var(--dark-text);font-size:16px;line-height:1.75;font-weight:300;}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;justify-content:space-between;align-items:center;padding:1rem 2.5rem;background:rgba(245,240,232,0.97);backdrop-filter:blur(10px);border-bottom:1px solid var(--border);}
+.nav-logo{font-family:var(--font-display);font-size:1.25rem;color:var(--forest);font-style:italic;letter-spacing:1px;}
+.nav-links{display:flex;gap:2rem;align-items:center;}
+.nav-links a{font-size:0.68rem;letter-spacing:3px;text-transform:uppercase;color:var(--mid-text);text-decoration:none;font-weight:400;transition:color 0.2s;}
+.nav-links a:hover{color:var(--forest);}
+.nav-admin-btn{font-size:0.65rem;letter-spacing:2px;text-transform:uppercase;color:var(--light-text);background:none;border:1px solid var(--border);cursor:pointer;font-family:var(--font-body);padding:5px 14px;transition:all 0.2s;}
+.nav-admin-btn:hover{color:var(--forest);border-color:var(--border-mid);}
+.hamburger{display:none;background:none;border:none;cursor:pointer;flex-direction:column;gap:5px;padding:4px;}
+.hamburger span{display:block;width:22px;height:1px;background:var(--mid-text);}
+
+/* PAGES */
+.page{display:none;padding-top:60px;min-height:100vh;}
+.page.active{display:block;}
+
+/* ── HERO ── */
+.hero{display:grid;grid-template-columns:55% 45%;min-height:calc(100vh - 60px);}
+.hero-left{background:var(--forest-deep);display:flex;flex-direction:column;justify-content:center;padding:5rem 4rem;position:relative;overflow:hidden;}
+.stripe-block{position:absolute;top:0;right:0;bottom:0;width:56px;display:flex;gap:7px;padding:0 8px;align-items:stretch;}
+.stripe-block span{display:block;flex:1;background:rgba(245,240,232,0.12);}
+.hero-eyebrow{font-size:0.6rem;letter-spacing:6px;text-transform:uppercase;color:var(--sage-light);margin-bottom:2.5rem;opacity:0;animation:fadeUp 1s 0.2s forwards;}
+.hero h1{font-family:var(--font-head);font-size:clamp(3.2rem,5.5vw,5rem);font-weight:400;color:var(--cream);line-height:1.05;letter-spacing:1px;opacity:0;animation:fadeUp 1s 0.4s forwards;}
+.hero h1 em{display:block;font-style:italic;color:var(--sage-light);font-size:0.52em;font-family:var(--font-display);letter-spacing:6px;margin:0.4em 0;font-weight:300;}
+.hero-details{margin-top:2.5rem;opacity:0;animation:fadeUp 1s 0.6s forwards;}
+.hero-date-line{font-size:0.78rem;letter-spacing:4px;text-transform:uppercase;color:var(--sage-light);margin-bottom:0.3rem;}
+.hero-venue-line{font-family:var(--font-display);font-size:1.3rem;color:rgba(245,240,232,0.7);font-style:italic;}
+.hero-time-line{font-size:0.65rem;letter-spacing:2px;color:rgba(178,196,186,0.45);margin-top:0.25rem;text-transform:uppercase;}
+.hero-action{margin-top:3.5rem;opacity:0;animation:fadeUp 1s 0.8s forwards;}
+.hero-right{background:var(--cream-dark);display:flex;flex-direction:column;justify-content:center;align-items:center;padding:4rem 3rem;gap:2rem;}
+.photo-frame{width:100%;max-width:300px;border:1px solid var(--border-mid);padding:10px;background:var(--cream);}
+.photo-inner{width:100%;aspect-ratio:3/4;background:var(--cream-mid);overflow:hidden;display:flex;align-items:center;justify-content:center;}
+.photo-inner img{width:100%;height:100%;object-fit:cover;display:block;}
+.photo-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0.5rem;color:var(--light-text);}
+.photo-empty svg{width:28px;height:28px;opacity:0.3;}
+.photo-empty span{font-size:0.6rem;letter-spacing:2px;text-transform:uppercase;}
+.hero-tagline{font-family:var(--font-display);font-size:1.1rem;font-style:italic;color:var(--mid-text);text-align:center;line-height:1.9;max-width:260px;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:translateY(0);}}
+
+/* BUTTONS */
+.btn-ghost{display:inline-block;padding:0.75rem 2rem;border:1px solid rgba(178,196,186,0.5);color:var(--cream);font-family:var(--font-body);font-size:0.65rem;letter-spacing:4px;text-transform:uppercase;background:transparent;cursor:pointer;transition:all 0.3s;font-weight:400;}
+.btn-ghost:hover{background:rgba(178,196,186,0.12);border-color:var(--sage-light);}
+.btn-dark{display:inline-block;padding:0.8rem 2rem;border:1px solid var(--forest);color:var(--ivory);font-family:var(--font-body);font-size:0.65rem;letter-spacing:4px;text-transform:uppercase;background:var(--forest);cursor:pointer;transition:all 0.3s;font-weight:400;width:100%;}
+.btn-dark:hover{background:var(--forest-deep);}
+.btn-outline{display:inline-block;padding:0.75rem 1.75rem;border:1px solid var(--border-mid);color:var(--forest);font-family:var(--font-body);font-size:0.65rem;letter-spacing:3px;text-transform:uppercase;background:transparent;cursor:pointer;transition:all 0.3s;font-weight:400;}
+.btn-outline:hover{background:var(--cream-dark);}
+.btn-sm{padding:0.5rem 1.25rem;font-size:0.6rem;width:auto;}
+
+/* SECTION */
+.wrap{max-width:880px;margin:0 auto;padding:0 2.5rem;}
+.wrap-wide{max-width:1020px;margin:0 auto;padding:0 2.5rem;}
+.section{padding:5rem 0;}
+.ruled{display:flex;align-items:center;gap:1.5rem;margin-bottom:3rem;}
+.ruled::before,.ruled::after{content:'';flex:1;height:1px;background:var(--border);}
+.ruled span{font-size:0.6rem;letter-spacing:5px;text-transform:uppercase;color:var(--sage);white-space:nowrap;font-weight:400;}
+
+/* HOME MOMENTS STRIP */
+.moments-strip{background:var(--cream-dark);padding:3.5rem 0;}
+.moments-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;}
+.moment-slot{aspect-ratio:3/4;overflow:hidden;background:var(--cream-mid);}
+.moment-slot img{width:100%;height:100%;object-fit:cover;display:block;}
+.moment-empty{width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0.5rem;color:var(--light-text);}
+.moment-empty svg{width:22px;height:22px;opacity:0.3;}
+.moment-empty span{font-size:0.58rem;letter-spacing:2px;text-transform:uppercase;}
+
+/* SAVE DATE */
+.save-grid{display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:center;}
+.save-body{font-family:var(--font-display);font-size:1.25rem;font-weight:300;color:var(--mid-text);font-style:italic;line-height:2.1;}
+.save-note{font-size:0.82rem;font-family:var(--font-body);font-style:normal;color:var(--light-text);margin-top:1rem;line-height:1.7;}
+.venue-block{background:var(--forest-deep);color:var(--cream);padding:3rem 2.5rem;text-align:center;}
+.venue-tag{font-size:0.58rem;letter-spacing:5px;text-transform:uppercase;color:var(--sage-light);margin-bottom:1.5rem;}
+.venue-name{font-family:var(--font-head);font-size:2rem;font-weight:400;font-style:italic;line-height:1.2;color:var(--cream);}
+.venue-loc{font-size:0.68rem;letter-spacing:3px;text-transform:uppercase;color:rgba(178,196,186,0.6);margin-top:0.75rem;}
+.venue-soon{font-size:0.75rem;color:rgba(178,196,186,0.35);margin-top:1.25rem;font-style:italic;font-family:var(--font-display);}
+
+/* GALLERY */
+.gallery-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;}
+.gal-slot{aspect-ratio:3/4;overflow:hidden;background:var(--cream-mid);}
+.gal-slot img{width:100%;height:100%;object-fit:cover;display:block;}
+.gal-empty{width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0.5rem;color:var(--light-text);}
+.gal-empty svg{width:22px;height:22px;opacity:0.3;}
+.gal-empty span{font-size:0.6rem;letter-spacing:2px;text-transform:uppercase;}
+.after-panel{margin-top:2.5rem;padding:2.5rem;border:1px solid var(--border);text-align:center;}
+.after-panel h3{font-family:var(--font-head);font-size:1.6rem;font-weight:400;font-style:italic;margin-bottom:0.75rem;color:var(--dark-text);}
+.after-panel p{font-size:0.9rem;color:var(--mid-text);line-height:1.9;}
+
+/* DRESS CODE */
+.dress-intro{font-family:var(--font-display);font-size:1.2rem;font-style:italic;color:var(--mid-text);line-height:1.9;margin-bottom:2.5rem;text-align:center;}
+.inspo-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:2.5rem;}
+.inspo-slot{aspect-ratio:2/3;overflow:hidden;background:var(--cream-mid);position:relative;}
+.inspo-slot img{width:100%;height:100%;object-fit:cover;display:block;}
+.inspo-cap{position:absolute;bottom:0;left:0;right:0;background:rgba(42,53,46,0.78);color:var(--cream);font-size:0.58rem;letter-spacing:3px;text-transform:uppercase;text-align:center;padding:0.55rem;}
+.inspo-empty{width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0.5rem;color:var(--light-text);}
+.inspo-empty svg{width:22px;height:22px;opacity:0.3;}
+.inspo-empty span{font-size:0.6rem;letter-spacing:2px;text-transform:uppercase;}
+.dress-two{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-bottom:2rem;}
+.dress-card{padding:2.5rem 2rem;border:1px solid var(--border);text-align:center;background:var(--cream-dark);}
+.dress-icon{font-size:2rem;margin-bottom:1rem;}
+.dress-card h3{font-family:var(--font-head);font-size:1.3rem;font-weight:400;margin-bottom:0.75rem;color:var(--dark-text);}
+.dress-card p{font-size:0.9rem;color:var(--mid-text);line-height:1.9;}
+.dress-footer-note{padding:1.5rem 2rem;border-left:2px solid var(--sage);background:var(--cream-dark);font-family:var(--font-display);font-style:italic;font-size:1.05rem;color:var(--mid-text);line-height:1.9;}
+
+/* RSVP */
+.rsvp-intro{text-align:center;font-family:var(--font-display);font-size:1.2rem;font-style:italic;color:var(--mid-text);margin-bottom:3rem;line-height:1.9;}
+.form-wrap{max-width:520px;margin:0 auto;}
+.form-group{margin-bottom:1.75rem;}
+.form-label{display:block;font-size:0.65rem;letter-spacing:3px;text-transform:uppercase;color:var(--forest-mid);margin-bottom:0.6rem;font-weight:500;}
+.form-input{width:100%;padding:0.85rem 1rem;background:var(--cream);border:1px solid var(--border-mid);color:var(--dark-text);font-family:var(--font-body);font-size:0.95rem;font-weight:300;transition:border-color 0.2s;outline:none;}
+.form-input:focus{border-color:var(--forest);box-shadow:0 0 0 3px rgba(59,74,63,0.07);}
+textarea.form-input{resize:vertical;min-height:95px;}
+select.form-input{cursor:pointer;}
+.radio-row{display:flex;flex-wrap:wrap;gap:1.25rem;margin-top:0.4rem;}
+.radio-opt{display:flex;align-items:center;gap:0.6rem;font-size:0.9rem;color:var(--mid-text);cursor:pointer;}
+.radio-opt input{accent-color:var(--forest);width:17px;height:17px;}
+.check-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:0.75rem;margin-top:0.4rem;}
+.check-opt{display:flex;align-items:center;gap:0.6rem;font-size:0.9rem;color:var(--mid-text);cursor:pointer;}
+.check-opt input{accent-color:var(--forest);width:17px;height:17px;}
+.alert-box{padding:1rem 1.25rem;font-size:0.9rem;line-height:1.6;margin-top:1rem;display:none;border:1px solid;}
+.alert-box.success{background:rgba(59,74,63,0.06);border-color:rgba(59,74,63,0.3);color:#1e3522;display:block;}
+.alert-box.error{background:rgba(140,30,30,0.05);border-color:rgba(140,30,30,0.22);color:#6e1515;display:block;}
+
+/* ADMIN LOGIN */
+.admin-gate{max-width:360px;margin:5rem auto;text-align:center;padding:0 2rem;}
+.admin-gate h2{font-family:var(--font-head);font-size:2rem;font-weight:400;font-style:italic;margin-bottom:0.4rem;}
+.admin-gate p{font-size:0.85rem;color:var(--mid-text);margin-bottom:2rem;}
+
+/* ADMIN DASH */
+.admin-shell{max-width:1000px;margin:0 auto;padding:2rem 2.5rem;}
+.admin-top{display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--border);padding-bottom:1.5rem;margin-bottom:0;flex-wrap:wrap;gap:1rem;}
+.admin-top h2{font-family:var(--font-head);font-size:1.8rem;font-weight:400;font-style:italic;}
+.link-btn{background:none;border:none;cursor:pointer;font-family:var(--font-body);font-size:0.65rem;letter-spacing:2px;text-transform:uppercase;color:var(--mid-text);padding:0;}
+.link-btn:hover{color:var(--forest);}
+.tab-bar{display:flex;border-bottom:1px solid var(--border);margin-bottom:2.5rem;}
+.tab-btn{padding:0.85rem 1.5rem;font-size:0.65rem;letter-spacing:2px;text-transform:uppercase;background:none;border:none;border-bottom:2px solid transparent;cursor:pointer;font-family:var(--font-body);color:var(--light-text);margin-bottom:-1px;transition:all 0.2s;}
+.tab-btn.on{border-bottom-color:var(--forest);color:var(--forest);font-weight:500;}
+.panel{display:none;}
+.panel.on{display:block;}
+
+/* STATS */
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-bottom:2.5rem;}
+.stat{border:1px solid var(--border);padding:1.5rem;text-align:center;background:var(--cream-dark);}
+.stat-n{font-family:var(--font-head);font-size:3rem;font-weight:400;color:var(--forest);line-height:1;}
+.stat-l{font-size:0.6rem;letter-spacing:3px;text-transform:uppercase;color:var(--mid-text);margin-top:0.4rem;}
+table{width:100%;border-collapse:collapse;font-size:0.88rem;}
+th{font-size:0.6rem;letter-spacing:2px;text-transform:uppercase;color:var(--mid-text);padding:0.7rem 0.5rem;border-bottom:1px solid var(--border);text-align:left;font-weight:500;}
+td{padding:0.9rem 0.5rem;border-bottom:1px solid rgba(59,74,63,0.06);vertical-align:top;line-height:1.6;}
+.tag{display:inline-block;padding:2px 10px;font-size:0.62rem;letter-spacing:1px;text-transform:uppercase;font-weight:500;}
+.tag.yes{background:rgba(59,74,63,0.09);color:#1e3522;border:1px solid rgba(59,74,63,0.22);}
+.tag.no{background:rgba(130,30,30,0.06);color:#6e1515;border:1px solid rgba(130,30,30,0.18);}
+.tag.maybe{background:rgba(59,74,63,0.04);color:var(--forest-mid);border:1px solid var(--border);}
+.dpill{display:inline-block;padding:1px 8px;font-size:0.65rem;background:var(--cream-dark);color:var(--mid-text);margin:1px;border:1px solid var(--border);}
+.empty-msg{text-align:center;padding:3rem;color:var(--light-text);font-family:var(--font-display);font-style:italic;font-size:1.1rem;}
+
+/* UPLOAD */
+.drop-zone{border:1px dashed var(--border-mid);padding:2.5rem;text-align:center;background:var(--cream-dark);cursor:pointer;transition:all 0.2s;margin-bottom:1.25rem;}
+.drop-zone:hover{border-color:var(--sage);background:var(--cream-mid);}
+.drop-zone p{font-size:0.9rem;color:var(--mid-text);margin-top:0.4rem;}
+.drop-zone small{font-size:0.72rem;color:var(--light-text);}
+.drop-icon{font-size:2rem;}
+.photo-grid-admin{display:grid;grid-template-columns:repeat(4,1fr);gap:0.75rem;margin-top:1.25rem;}
+.p-item{position:relative;aspect-ratio:3/4;overflow:hidden;border:1px solid var(--border);}
+.p-item img{width:100%;height:100%;object-fit:cover;}
+.p-label{position:absolute;bottom:0;left:0;right:0;background:rgba(42,53,46,0.78);color:var(--cream);font-size:0.55rem;letter-spacing:2px;text-transform:uppercase;text-align:center;padding:4px;}
+.p-del{position:absolute;top:5px;right:5px;background:rgba(130,30,30,0.85);color:#fff;border:none;width:24px;height:24px;font-size:12px;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+.prog{font-size:0.82rem;color:var(--forest);margin-top:0.5rem;display:none;}
+.loc-select{width:100%;margin-bottom:1rem;padding:0.78rem 1rem;border:1px solid var(--border-mid);font-family:var(--font-body);font-size:0.9rem;background:var(--cream);color:var(--dark-text);outline:none;cursor:pointer;}
+.loc-select:focus{border-color:var(--forest);}
+
+/* SETTINGS PANEL */
+.settings-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;}
+.setting-card{background:var(--cream-dark);border:1px solid var(--border);padding:1.75rem;}
+.setting-card h3{font-size:0.65rem;letter-spacing:3px;text-transform:uppercase;color:var(--forest-mid);margin-bottom:1.25rem;font-weight:500;}
+.setting-field{margin-bottom:1rem;}
+.setting-label{display:block;font-size:0.68rem;letter-spacing:2px;text-transform:uppercase;color:var(--mid-text);margin-bottom:0.4rem;}
+.setting-input{width:100%;padding:0.75rem 0.9rem;background:var(--cream);border:1px solid var(--border-mid);color:var(--dark-text);font-family:var(--font-body);font-size:0.9rem;outline:none;transition:border-color 0.2s;}
+.setting-input:focus{border-color:var(--forest);}
+textarea.setting-input{resize:vertical;min-height:80px;}
+.save-settings-btn{margin-top:0.5rem;padding:0.65rem 1.5rem;background:var(--forest);color:var(--cream);border:none;font-family:var(--font-body);font-size:0.65rem;letter-spacing:3px;text-transform:uppercase;cursor:pointer;width:100%;transition:background 0.2s;}
+.save-settings-btn:hover{background:var(--forest-deep);}
+.settings-saved{font-size:0.78rem;color:var(--forest-mid);margin-top:0.5rem;display:none;text-align:center;}
+
+/* FOOTER */
+footer{text-align:center;padding:2.5rem;border-top:1px solid var(--border);font-size:0.6rem;letter-spacing:3px;text-transform:uppercase;color:var(--light-text);}
+footer strong{color:var(--forest-mid);font-weight:400;}
+
+/* MOBILE */
+@media(max-width:768px){
+  .nav-links{display:none;flex-direction:column;position:fixed;top:60px;left:0;right:0;background:var(--ivory);padding:1.5rem 2rem;border-bottom:1px solid var(--border);z-index:199;gap:1.25rem;}
+  .nav-links.open{display:flex;}
+  .hamburger{display:flex;}
+  .nav-admin-btn{display:none;}
+  .hero{grid-template-columns:1fr;}
+  .hero-right{display:none;}
+  .hero-left{padding:4rem 2rem;}
+  .save-grid,.settings-grid,.dress-two{grid-template-columns:1fr;}
+  .inspo-grid,.gallery-grid,.moments-grid{grid-template-columns:repeat(2,1fr);}
+  .check-grid{grid-template-columns:repeat(2,1fr);}
+  .stats{grid-template-columns:1fr;}
+  .photo-grid-admin{grid-template-columns:repeat(2,1fr);}
+  .wrap,.wrap-wide{padding:0 1.25rem;}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">Roberto &amp; Carly</div>
+  <div class="nav-links" id="nav-links">
+    <a href="#" onclick="go('home');closeNav()">Home</a>
+    <a href="#" onclick="go('gallery');closeNav()">Photos</a>
+    <a href="#" onclick="go('dress');closeNav()">Dress code</a>
+    <a href="#" onclick="go('rsvp');closeNav()">RSVP</a>
+    <button class="nav-admin-btn" onclick="go('admin');closeNav()">🔒 Admin</button>
+  </div>
+  <button class="hamburger" onclick="toggleNav()" aria-label="Menu"><span></span><span></span><span></span></button>
+</nav>
+
+<!-- ══ HOME ══ -->
+<div id="page-home" class="page active">
+  <div class="hero">
+    <div class="hero-left">
+      <div class="stripe-block"><span></span><span></span><span></span><span></span></div>
+      <div class="hero-eyebrow">You are invited</div>
+      <h1>Roberto<em>&amp;</em>Carly</h1>
+      <div class="hero-details">
+        <div class="hero-date-line" id="disp-date">12 · December · 2025</div>
+        <div class="hero-venue-line" id="disp-venue">The Wood, Humansdorp</div>
+        <div class="hero-time-line" id="disp-time">Time to be announced</div>
+      </div>
+      <div class="hero-action"><button class="btn-ghost" onclick="go('rsvp')">RSVP now</button></div>
+    </div>
+    <div class="hero-right">
+      <div class="photo-frame"><div class="photo-inner" id="hero-photo-wrap"><div class="photo-empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="1"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg><span>Couple photo</span></div></div></div>
+      <div class="hero-tagline" id="disp-tagline">"Two souls, one heart —<br>a lifetime of adventure begins."</div>
+    </div>
+  </div>
+
+  <div class="moments-strip">
+    <div class="wrap"><div class="ruled"><span>Our moments</span></div></div>
+    <div class="wrap"><div class="moments-grid" id="home-grid">
+      <div class="moment-slot"><div class="moment-empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="1"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg><span>Photo 1</span></div></div>
+      <div class="moment-slot"><div class="moment-empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="1"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg><span>Photo 2</span></div></div>
+      <div class="moment-slot"><div class="moment-empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="1"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg><span>Photo 3</span></div></div>
+    </div></div>
+  </div>
+
+  <div class="section">
+    <div class="wrap">
+      <div class="ruled"><span>Save the date</span></div>
+      <div class="save-grid">
+        <div>
+          <div class="save-body" id="disp-savetext">We are so excited to celebrate this special day with you. Please RSVP so we can plan the perfect occasion.</div>
+          <div class="save-note" id="disp-savenote">More details — timing, food, and the full day programme — will be shared closer to the date.</div>
+        </div>
+        <div class="venue-block">
+          <div class="venue-tag">The venue</div>
+          <div class="venue-name" id="disp-venuename">The Wood</div>
+          <div class="venue-loc" id="disp-venueloc">Humansdorp · Eastern Cape · South Africa</div>
+          <div class="venue-soon" id="disp-venuenote">Directions & map coming soon</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer><strong>Roberto &amp; Carly</strong> &nbsp;·&nbsp; 12 December 2025 &nbsp;·&nbsp; The Wood, Humansdorp</footer>
+</div>
+
+<!-- ══ GALLERY ══ -->
+<div id="page-gallery" class="page">
+  <div class="section">
+    <div class="wrap">
+      <div class="ruled"><span>Our photos</span></div>
+      <div class="gallery-grid" id="gallery-grid">
+        <div class="gal-slot"><div class="gal-empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="1"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg><span>Coming soon</span></div></div>
+        <div class="gal-slot"><div class="gal-empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="1"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg><span>Coming soon</span></div></div>
+        <div class="gal-slot"><div class="gal-empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="1"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg><span>Coming soon</span></div></div>
+        <div class="gal-slot"><div class="gal-empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="1"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg><span>Coming soon</span></div></div>
+        <div class="gal-slot"><div class="gal-empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="1"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg><span>Coming soon</span></div></div>
+        <div class="gal-slot"><div class="gal-empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="1"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg><span>Coming soon</span></div></div>
+      </div>
+      <div class="after-panel">
+        <h3>After the wedding</h3>
+        <p>A link to the full wedding photo album will appear here after the ceremony.<br>Come back to relive all the beautiful memories.</p>
+      </div>
+    </div>
+  </div>
+  <footer><strong>Roberto &amp; Carly</strong> &nbsp;·&nbsp; 12 December 2025</footer>
+</div>
+
+<!-- ══ DRESS CODE ══ -->
+<div id="page-dress" class="page">
+  <div class="section">
+    <div class="wrap-wide">
+      <div class="ruled"><span>Dress code</span></div>
+      <div class="dress-intro">We want our guests to look and feel wonderful.<br>Here is some inspiration to help you dress for the occasion.</div>
+      <div class="inspo-grid" id="dress-inspo-grid">
+        <div class="inspo-slot"><div class="inspo-empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="1"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg><span>Inspo 1</span></div></div>
+        <div class="inspo-slot"><div class="inspo-empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="1"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg><span>Inspo 2</span></div></div>
+        <div class="inspo-slot"><div class="inspo-empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="1"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg><span>Inspo 3</span></div></div>
+      </div>
+      <div class="dress-two">
+        <div class="dress-card"><div class="dress-icon">🤵</div><h3>Gentlemen</h3><p>Formal suit and tie. This is a special occasion — please dress to celebrate. Smart, tailored, and elegant.</p></div>
+        <div class="dress-card"><div class="dress-icon">👗</div><h3>Ladies</h3><p>Cocktail dress or formal gown. Elegant and celebratory. Please avoid white, ivory, and cream out of respect for the bride.</p></div>
+      </div>
+      <div class="dress-footer-note">We want everyone to feel beautiful and comfortable on our special day. If you have any questions about the dress code, please don't hesitate to reach out to us directly.</div>
+    </div>
+  </div>
+  <footer><strong>Roberto &amp; Carly</strong> &nbsp;·&nbsp; 12 December 2025</footer>
+</div>
+
+<!-- ══ RSVP ══ -->
+<div id="page-rsvp" class="page">
+  <div class="section">
+    <div class="wrap">
+      <div class="ruled"><span>RSVP</span></div>
+      <div class="rsvp-intro">Kindly let us know by <strong style="font-style:normal;color:var(--forest)">1 November 2025</strong><br>so we can prepare the perfect celebration for you.</div>
+      <div class="form-wrap">
+        <div class="form-group"><label class="form-label">Full name *</label><input class="form-input" type="text" id="rsvp-name" placeholder="Your full name"></div>
+        <div class="form-group"><label class="form-label">Email address</label><input class="form-input" type="email" id="rsvp-email" placeholder="Optional — for updates"></div>
+        <div class="form-group"><label class="form-label">Will you be attending?</label>
+          <div class="radio-row">
+            <label class="radio-opt"><input type="radio" name="att" value="yes"> Joyfully attending</label>
+            <label class="radio-opt"><input type="radio" name="att" value="no"> Sadly can't make it</label>
+            <label class="radio-opt"><input type="radio" name="att" value="maybe"> Not sure yet</label>
+          </div>
+        </div>
+        <div class="form-group"><label class="form-label">Number of guests (including yourself)</label>
+          <select class="form-input" id="rsvp-guests"><option value="1">Just me</option><option value="2">2 people</option><option value="3">3 people</option><option value="4">4 people</option><option value="5">5 people</option></select>
+        </div>
+        <div class="form-group"><label class="form-label">Dietary requirements</label>
+          <div class="check-grid">
+            <label class="check-opt"><input type="checkbox" id="d-none"> None</label>
+            <label class="check-opt"><input type="checkbox" id="d-veg"> Vegetarian</label>
+            <label class="check-opt"><input type="checkbox" id="d-vegan"> Vegan</label>
+            <label class="check-opt"><input type="checkbox" id="d-gluten"> Gluten free</label>
+            <label class="check-opt"><input type="checkbox" id="d-halal"> Halal</label>
+            <label class="check-opt"><input type="checkbox" id="d-kosher"> Kosher</label>
+          </div>
+        </div>
+        <div class="form-group"><label class="form-label">Allergies or message for the couple</label><textarea class="form-input" id="rsvp-notes" placeholder="e.g. nut allergy, or a warm message for Roberto & Carly"></textarea></div>
+        <button class="btn-dark" onclick="submitRSVP()">Send my RSVP</button>
+        <div class="alert-box" id="rsvp-alert"></div>
+      </div>
+    </div>
+  </div>
+  <footer><strong>Roberto &amp; Carly</strong> &nbsp;·&nbsp; 12 December 2025</footer>
+</div>
+
+<!-- ══ ADMIN ══ -->
+<div id="page-admin" class="page">
+  <div id="admin-gate">
+    <div class="admin-gate">
+      <p style="font-size:1.8rem;margin-bottom:0.5rem">🌿</p>
+      <h2>Admin</h2>
+      <p>For Roberto &amp; Carly only</p>
+      <div class="form-group" style="margin-top:1rem;text-align:left"><label class="form-label">Password</label><input class="form-input" type="password" id="admin-pw" placeholder="Enter password" onkeydown="if(event.key==='Enter')adminIn()"></div>
+      <button class="btn-dark" onclick="adminIn()" style="margin-top:0.5rem">Sign in</button>
+      <div class="alert-box" id="login-err"></div>
+    </div>
+  </div>
+
+  <div id="admin-dash" style="display:none">
+    <div class="admin-shell">
+      <div class="admin-top">
+        <h2>Admin dashboard</h2>
+        <button class="link-btn" onclick="adminOut()">Sign out</button>
+      </div>
+      <div class="tab-bar">
+        <button class="tab-btn on" onclick="tab('guests',this)">Guest list</button>
+        <button class="tab-btn" onclick="tab('photos',this)">Photos</button>
+        <button class="tab-btn" onclick="tab('dress',this)">Dress inspo</button>
+        <button class="tab-btn" onclick="tab('settings',this)">Page settings</button>
+      </div>
+
+      <!-- GUESTS -->
+      <div class="panel on" id="tab-guests">
+        <div class="stats">
+          <div class="stat"><div class="stat-n" id="st-yes">—</div><div class="stat-l">Attending</div></div>
+          <div class="stat"><div class="stat-n" id="st-no">—</div><div class="stat-l">Can't come</div></div>
+          <div class="stat"><div class="stat-n" id="st-total">—</div><div class="stat-l">Total heads</div></div>
+        </div>
+        <div id="guest-container"><div class="empty-msg">Loading...</div></div>
+      </div>
+
+      <!-- PHOTOS -->
+      <div class="panel" id="tab-photos">
+        <p style="font-size:0.9rem;color:var(--mid-text);margin-bottom:1.5rem;line-height:1.7">Upload couple photos and choose where they appear — the Hero panel, Home moments strip, or Gallery page.</p>
+        <label class="form-label">Where should this photo appear?</label>
+        <select class="loc-select" id="photo-loc" style="margin-top:0.4rem">
+          <option value="hero">Hero (main couple photo, right side)</option>
+          <option value="home">Home page — moments strip</option>
+          <option value="gallery">Gallery page</option>
+        </select>
+        <div class="drop-zone" onclick="document.getElementById('photo-input').click()">
+          <div class="drop-icon">📷</div>
+          <p>Click to choose a photo</p>
+          <small>JPG or PNG · max 5MB</small>
+        </div>
+        <input type="file" id="photo-input" accept="image/*" style="display:none" onchange="upload(this,'photo')">
+        <div class="prog" id="photo-prog">Uploading...</div>
+        <div class="alert-box" id="photo-alert"></div>
+        <div class="ruled" style="margin-top:2rem"><span>Uploaded photos</span></div>
+        <div class="photo-grid-admin" id="photo-admin-grid"><div class="empty-msg" style="grid-column:1/-1">No photos yet</div></div>
+      </div>
+
+      <!-- DRESS INSPO -->
+      <div class="panel" id="tab-dress">
+        <p style="font-size:0.9rem;color:var(--mid-text);margin-bottom:1.5rem;line-height:1.7">Upload up to 3 dress code inspiration photos. These show on the Dress code page. Delete and replace anytime.</p>
+        <div class="drop-zone" onclick="document.getElementById('dress-input').click()">
+          <div class="drop-icon">👗</div>
+          <p>Click to upload a dress inspo photo</p>
+          <small>JPG or PNG · max 5MB</small>
+        </div>
+        <input type="file" id="dress-input" accept="image/*" style="display:none" onchange="upload(this,'dress')">
+        <div class="prog" id="dress-prog">Uploading...</div>
+        <div class="alert-box" id="dress-alert"></div>
+        <div class="ruled" style="margin-top:2rem"><span>Current inspiration photos</span></div>
+        <div class="photo-grid-admin" id="dress-admin-grid"><div class="empty-msg" style="grid-column:1/-1">No dress inspo photos yet</div></div>
+      </div>
+
+      <!-- PAGE SETTINGS -->
+      <div class="panel" id="tab-settings">
+        <p style="font-size:0.9rem;color:var(--mid-text);margin-bottom:2rem;line-height:1.7">Edit the text and details that appear on the home page. Changes go live immediately for all guests.</p>
+        <div class="settings-grid">
+          <div class="setting-card">
+            <h3>Event details</h3>
+            <div class="setting-field"><label class="setting-label">Date line (shown on hero)</label><input class="setting-input" id="s-date" placeholder="12 · December · 2025"></div>
+            <div class="setting-field"><label class="setting-label">Venue line (shown on hero)</label><input class="setting-input" id="s-venue" placeholder="The Wood, Humansdorp"></div>
+            <div class="setting-field"><label class="setting-label">Time / programme note</label><input class="setting-input" id="s-time" placeholder="Time to be announced"></div>
+            <div class="setting-field"><label class="setting-label">Venue name (in the green block)</label><input class="setting-input" id="s-venuename" placeholder="The Wood"></div>
+            <div class="setting-field"><label class="setting-label">Venue location line</label><input class="setting-input" id="s-venueloc" placeholder="Humansdorp · Eastern Cape · South Africa"></div>
+            <div class="setting-field"><label class="setting-label">Venue note (e.g. map coming soon)</label><input class="setting-input" id="s-venuenote" placeholder="Directions & map coming soon"></div>
+            <button class="save-settings-btn" onclick="saveSettings('event')">Save event details</button>
+            <div class="settings-saved" id="saved-event">✓ Saved</div>
+          </div>
+          <div class="setting-card">
+            <h3>Home page text</h3>
+            <div class="setting-field"><label class="setting-label">Couple tagline (below photo)</label><textarea class="setting-input" id="s-tagline" rows="3" placeholder='"Two souls, one heart — a lifetime of adventure begins."'></textarea></div>
+            <div class="setting-field"><label class="setting-label">Save the date paragraph</label><textarea class="setting-input" id="s-savetext" rows="3" placeholder="We are so excited to celebrate this special day with you..."></textarea></div>
+            <div class="setting-field"><label class="setting-label">Details coming soon note</label><textarea class="setting-input" id="s-savenote" rows="2" placeholder="More details — timing, food, and the full day programme — will be shared closer to the date."></textarea></div>
+            <button class="save-settings-btn" onclick="saveSettings('text')">Save page text</button>
+            <div class="settings-saved" id="saved-text">✓ Saved</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const SB_URL='https://pvbrjikgmupaflqudkoa.supabase.co';
+const SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB2YnJqaWtnbXVwYWZscXVka29hIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk4OTQ2NjgsImV4cCI6MjA5NTQ3MDY2OH0.ShVNhr10o138uQ3T2r2gSHaHoseLpwtR53ztT_0_rLM';
+const PW='carly2025';
+const sb=supabase.createClient(SB_URL,SB_KEY);
+let isAdmin=false;
+
+// ── NAV ──
+function go(id){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById('page-'+id).classList.add('active');
+  window.scrollTo(0,0);
+  if(id==='admin'&&isAdmin){loadGuests();loadPhotosAdmin();loadDressAdmin();loadSettingsFields();}
+  if(id==='gallery'||id==='home')loadPhotosPublic();
+  if(id==='dress')loadDressPublic();
+}
+function toggleNav(){document.getElementById('nav-links').classList.toggle('open');}
+function closeNav(){document.getElementById('nav-links').classList.remove('open');}
+function tab(id,btn){
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('on'));
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('on'));
+  btn.classList.add('on');
+  document.getElementById('tab-'+id).classList.add('on');
+  if(id==='photos')loadPhotosAdmin();
+  if(id==='dress')loadDressAdmin();
+  if(id==='settings')loadSettingsFields();
+}
+
+// ── RSVP ──
+async function submitRSVP(){
+  const name=document.getElementById('rsvp-name').value.trim();
+  const email=document.getElementById('rsvp-email').value.trim();
+  const att=document.querySelector('input[name=att]:checked')?.value;
+  const guests=parseInt(document.getElementById('rsvp-guests').value);
+  const notes=document.getElementById('rsvp-notes').value.trim();
+  const el=document.getElementById('rsvp-alert');
+  if(!name){el.className='alert-box error';el.textContent='Please enter your name.';return;}
+  if(!att){el.className='alert-box error';el.textContent='Please select whether you are attending.';return;}
+  const diets=['none','veg','vegan','gluten','halal','kosher'].filter(d=>document.getElementById('d-'+d).checked);
+  const{error}=await sb.from('rsvp').insert([{name,email,attending:att,guests,diets,notes}]);
+  if(error){el.className='alert-box error';el.textContent='Something went wrong. Please try again.';return;}
+  el.className='alert-box success';
+  el.textContent=att==='yes'?'🎉 Wonderful! Roberto & Carly are so excited to celebrate with you.':att==='no'?'Thank you for letting us know — you will be missed!':'Got it! We really hope you can make it.';
+  document.getElementById('rsvp-name').value='';document.getElementById('rsvp-email').value='';
+  document.querySelectorAll('input[name=att]').forEach(r=>r.checked=false);
+  document.getElementById('rsvp-guests').value='1';document.getElementById('rsvp-notes').value='';
+  ['none','veg','vegan','gluten','halal','kosher'].forEach(d=>document.getElementById('d-'+d).checked=false);
+}
+
+// ── ADMIN AUTH ──
+function adminIn(){
+  const pw=document.getElementById('admin-pw').value;
+  const el=document.getElementById('login-err');
+  if(pw===PW){
+    isAdmin=true;
+    document.getElementById('admin-gate').style.display='none';
+    document.getElementById('admin-dash').style.display='block';
+    loadGuests();loadPhotosAdmin();loadSettingsFields();
+  }else{el.className='alert-box error';el.textContent='Incorrect password.';}
+}
+function adminOut(){
+  isAdmin=false;
+  document.getElementById('admin-gate').style.display='block';
+  document.getElementById('admin-dash').style.display='none';
+  document.getElementById('admin-pw').value='';
+}
+
+// ── GUESTS ──
+async function loadGuests(){
+  const c=document.getElementById('guest-container');
+  const{data,error}=await sb.from('rsvp').select('*').order('created_at',{ascending:false});
+  if(error||!data){c.innerHTML='<div class="empty-msg">Could not load guest list.</div>';return;}
+  if(!data.length){
+    ['yes','no','total'].forEach(s=>document.getElementById('st-'+s).textContent='0');
+    c.innerHTML='<div class="empty-msg">No RSVPs yet — share the link with your guests!</div>';return;
+  }
+  document.getElementById('st-yes').textContent=data.filter(e=>e.attending==='yes').length;
+  document.getElementById('st-no').textContent=data.filter(e=>e.attending==='no').length;
+  document.getElementById('st-total').textContent=data.filter(e=>e.attending==='yes').reduce((s,e)=>s+(e.guests||1),0);
+  let h='<table><thead><tr><th>Name</th><th>Attending</th><th>Guests</th><th>Dietary</th><th>Notes</th><th>Date</th></tr></thead><tbody>';
+  data.forEach(e=>{
+    const b=e.attending==='yes'?'yes':e.attending==='no'?'no':'maybe';
+    const l=e.attending==='yes'?'Yes':e.attending==='no'?'No':'Maybe';
+    const d=(e.diets||[]).filter(x=>x!=='none').map(x=>`<span class="dpill">${x}</span>`).join('');
+    const dt=new Date(e.created_at).toLocaleDateString('en-ZA',{day:'numeric',month:'short',year:'numeric'});
+    h+=`<tr><td><strong>${e.name}</strong>${e.email?`<br><span style="font-size:0.78rem;color:var(--mid-text)">${e.email}</span>`:''}</td><td><span class="tag ${b}">${l}</span></td><td style="text-align:center">${e.guests||1}</td><td>${d||'—'}</td><td style="color:var(--mid-text)">${e.notes||'—'}</td><td style="color:var(--mid-text);font-size:0.75rem;white-space:nowrap">${dt}</td></tr>`;
+  });
+  h+='</tbody></table>';c.innerHTML=h;
+}
+
+// ── UPLOAD ──
+async function upload(input,type){
+  const file=input.files[0];if(!file)return;
+  if(file.size>5*1024*1024){showA(type,'error','File too large — max 5MB.');return;}
+  const progId=type==='dress'?'dress-prog':'photo-prog';
+  const prog=document.getElementById(progId);prog.style.display='block';
+  const loc=type==='dress'?'dress':document.getElementById('photo-loc').value;
+  const fname=type+'_'+Date.now()+'_'+file.name.replace(/[^a-zA-Z0-9._]/g,'_');
+  const{error:ue}=await sb.storage.from('wedding-photos').upload(fname,file,{cacheControl:'3600',upsert:false});
+  if(ue){prog.style.display='none';showA(type,'error','Upload failed: '+ue.message);input.value='';return;}
+  const{data:ud}=sb.storage.from('wedding-photos').getPublicUrl(fname);
+  const{error:de}=await sb.from('photos').insert([{url:ud.publicUrl,location:loc,filename:fname}]);
+  if(de){prog.style.display='none';showA(type,'error','Database error. Try again.');input.value='';return;}
+  prog.style.display='none';showA(type,'success','Photo uploaded!');input.value='';
+  if(type==='dress'){loadDressAdmin();loadDressPublic();}else{loadPhotosAdmin();loadPhotosPublic();}
+}
+function showA(type,cls,msg){
+  const id=type==='dress'?'dress-alert':'photo-alert';
+  const el=document.getElementById(id);el.className='alert-box '+cls;el.textContent=msg;
+  setTimeout(()=>{el.className='alert-box';el.textContent='';},4000);
+}
+async function delPhoto(id,fname){
+  if(!confirm('Delete this photo?'))return;
+  await sb.storage.from('wedding-photos').remove([fname]);
+  await sb.from('photos').delete().eq('id',id);
+  loadPhotosAdmin();loadDressAdmin();loadPhotosPublic();loadDressPublic();
+}
+
+// ── PHOTOS ADMIN ──
+async function loadPhotosAdmin(){
+  const g=document.getElementById('photo-admin-grid');
+  const{data}=await sb.from('photos').select('*').not('location','eq','dress').order('created_at',{ascending:false});
+  if(!data||!data.length){g.innerHTML='<div class="empty-msg" style="grid-column:1/-1">No photos yet</div>';return;}
+  const lmap={hero:'Hero',home:'Home',gallery:'Gallery'};
+  g.innerHTML=data.map(p=>`<div class="p-item"><img src="${p.url}" alt=""><div class="p-label">${lmap[p.location]||p.location}</div><button class="p-del" onclick="delPhoto('${p.id}','${p.filename}')">✕</button></div>`).join('');
+}
+async function loadDressAdmin(){
+  const g=document.getElementById('dress-admin-grid');
+  const{data}=await sb.from('photos').select('*').eq('location','dress').order('created_at',{ascending:false});
+  if(!data||!data.length){g.innerHTML='<div class="empty-msg" style="grid-column:1/-1">No dress inspo photos yet</div>';return;}
+  g.innerHTML=data.map(p=>`<div class="p-item"><img src="${p.url}" alt=""><div class="p-label">Inspo</div><button class="p-del" onclick="delPhoto('${p.id}','${p.filename}')">✕</button></div>`).join('');
+}
+
+// ── PHOTOS PUBLIC ──
+async function loadPhotosPublic(){
+  const{data}=await sb.from('photos').select('*').order('created_at',{ascending:false});
+  if(!data||!data.length)return;
+  const hero=data.filter(p=>p.location==='hero');
+  const home=data.filter(p=>p.location==='home');
+  const gal=data.filter(p=>p.location==='gallery');
+  const hw=document.getElementById('hero-photo-wrap');
+  if(hw&&hero.length)hw.innerHTML=`<img src="${hero[0].url}" alt="Roberto and Carly">`;
+  const hg=document.getElementById('home-grid');
+  if(hg&&home.length)hg.innerHTML=home.slice(0,3).map(p=>`<div class="moment-slot"><img src="${p.url}" alt="Roberto and Carly"></div>`).join('');
+  const gg=document.getElementById('gallery-grid');
+  if(gg&&gal.length)gg.innerHTML=gal.map(p=>`<div class="gal-slot"><img src="${p.url}" alt="Roberto and Carly"></div>`).join('');
+}
+async function loadDressPublic(){
+  const{data}=await sb.from('photos').select('*').eq('location','dress').order('created_at',{ascending:false});
+  const g=document.getElementById('dress-inspo-grid');if(!g||!data||!data.length)return;
+  const caps=['Ladies inspo','Celebration look','Gentlemen'];
+  g.innerHTML=data.slice(0,3).map((p,i)=>`<div class="inspo-slot"><img src="${p.url}" alt="Dress inspiration"><div class="inspo-cap">${caps[i]||'Inspiration'}</div></div>`).join('');
+}
+
+// ── SETTINGS ──
+const DEFAULTS={
+  date:'12 · December · 2025',venue:'The Wood, Humansdorp',time:'Time to be announced',
+  venuename:'The Wood',venueloc:'Humansdorp · Eastern Cape · South Africa',venuenote:'Directions & map coming soon',
+  tagline:'"Two souls, one heart —\na lifetime of adventure begins."',
+  savetext:'We are so excited to celebrate this special day with you. Please RSVP so we can plan the perfect occasion.',
+  savenote:'More details — timing, food, and the full day programme — will be shared closer to the date.'
+};
+const KEYS=Object.keys(DEFAULTS);
+
+async function loadSettings(){
+  const{data}=await sb.from('settings').select('*');
+  const map={};if(data)data.forEach(r=>map[r.key]=r.value);
+  KEYS.forEach(k=>{
+    const val=map[k]||DEFAULTS[k];
+    const el=document.getElementById('disp-'+k);
+    if(el){if(k==='tagline')el.innerHTML=val.replace(/\n/g,'<br>');else el.textContent=val;}
+  });
+}
+async function loadSettingsFields(){
+  const{data}=await sb.from('settings').select('*');
+  const map={};if(data)data.forEach(r=>map[r.key]=r.value);
+  KEYS.forEach(k=>{
+    const inp=document.getElementById('s-'+k);
+    if(inp)inp.value=map[k]||DEFAULTS[k];
+  });
+}
+async function saveSettings(group){
+  const groupKeys=group==='event'?['date','venue','time','venuename','venueloc','venuenote']:['tagline','savetext','savenote'];
+  for(const k of groupKeys){
+    const inp=document.getElementById('s-'+k);if(!inp)continue;
+    const val=inp.value.trim()||DEFAULTS[k];
+    await sb.from('settings').upsert({key:k,value:val},{onConflict:'key'});
+    const el=document.getElementById('disp-'+k);
+    if(el){if(k==='tagline')el.innerHTML=val.replace(/\n/g,'<br>');else el.textContent=val;}
+  }
+  const saved=document.getElementById('saved-'+group);
+  saved.style.display='block';setTimeout(()=>saved.style.display='none',2500);
+}
+
+// ── INIT ──
+loadPhotosPublic();
+loadDressPublic();
+loadSettings();
+</script>
+</body>
+</html>
